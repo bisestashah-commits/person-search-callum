@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react' // 👈 Import useCallback
 import { getUserById } from '@/app/actions/actions'
 import { User } from '@/app/actions/schemas'
 
@@ -21,7 +21,8 @@ export function useUser(userId: string | null) {
     }
   }, [userId])
 
-  const mutate = () => {
+  // 👈 Wrap mutate in useCallback
+  const mutate = useCallback(() => {
     if (userId) {
       getUserById(userId).then(fetchedUser => {
         if (fetchedUser) {
@@ -31,8 +32,7 @@ export function useUser(userId: string | null) {
         }
       })
     }
-  }
+  }, [userId]) // 👈 Dependencies: userId is the only dependency
 
   return { user, mutate }
 }
-
