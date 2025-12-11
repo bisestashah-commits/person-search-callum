@@ -2,12 +2,14 @@
 'use client'
 
 import Link from 'next/link';
-import { Search, Moon, Sun } from 'lucide-react';
+import { Search, Moon, Sun, LogOut, LogIn } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from "@/components/ui/button";
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
+  const { data: session } = useSession();
 
   return (
     <nav className="bg-background shadow-md">
@@ -35,6 +37,30 @@ export default function Navbar() {
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </Button>
+            {session ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-foreground">{session.user?.email}</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => signOut()}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => signIn('google')}
+                className="flex items-center gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
       </div>

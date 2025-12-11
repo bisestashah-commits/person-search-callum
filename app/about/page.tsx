@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+import { auth } from '@/auth';
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -70,7 +72,12 @@ function DeveloperInfo() {
   )
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const session = await auth();
+  if (!session) {
+    redirect('/api/auth/signin');
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <main className="flex-grow container mx-auto px-4 py-8">
